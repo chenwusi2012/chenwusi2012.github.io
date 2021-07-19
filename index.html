@@ -16,7 +16,7 @@ td {
 }
 </style>
 <body onload='init()'>
-<h1>Fuel Efficiency Study</h1>
+<h1>Automobile Fuel Efficiency Study</h1>
 <h3>CS416 Data Visualization Final Project - Wusi Chen</h3>
 <p>Do you know which types of cars are more fuel-efficient on highway (or city roads)? Check out the below visualizations.</p>
 <p>Data Source: 2017 automobile data (Here is the <a href="https://flunky.github.io/cars2017.csv">cars2017.csv</a> file).</p>
@@ -142,7 +142,7 @@ function drawChart(fuel, cylinder) {
     var color = d3.scaleOrdinal().domain(["USA", "Europe", "Asia" ]).range([ "#440154ff", "#21908dff", "#fde725ff"])
 
 d3.select("#svg1")
-.attr("width", width + 2 * margin)
+.attr("width", width + margin + 0.5 * margin)
 .attr("height", height + 2 * margin)
 .append("g")
 .attr("transform", "translate("+margin+","+margin+")")
@@ -248,7 +248,7 @@ if (fuel == "Gasoline" && cylinder == 4) {
     .attr('y', y(32.7))
     .attr('stroke', 'DarkOrange')
     .style("font-size", 13)
-    .text("Asia cars are more");
+    .text("Asia cars are top");
 
     d3.select("#svg1")
     .append("g")
@@ -258,7 +258,7 @@ if (fuel == "Gasoline" && cylinder == 4) {
     .attr('y', y(32.7) + lineSpace)
     .attr('stroke', 'DarkOrange')
     .style("font-size", 13)
-    .text("fuel efficient");
+    .text("fuel-efficient");
 }
 
 if (fuel == "Gasoline" && cylinder == 8) {
@@ -294,7 +294,7 @@ if (fuel == "Gasoline" && cylinder == 8) {
     .attr('y', y(23.5) + lineSpace)
     .attr('stroke', 'DarkOrange')
     .style("font-size", 13)
-    .text("more fuel efficient");
+    .text("top fuel-efficient");
 }
 
 
@@ -313,14 +313,14 @@ svg.append("circle").attr("cx",30).attr("cy",yPos+60).attr("r", radius).style("f
 svg.append("text").attr("x", 50).attr("y", yPos).text("USA Brands").style("font-size", "15px").attr("alignment-baseline","middle");
 svg.append("text").attr("x", 50).attr("y", yPos+30).text("Europe Brands").style("font-size", "15px").attr("alignment-baseline","middle");
 svg.append("text").attr("x", 50).attr("y", yPos+60).text("Asia Brands").style("font-size", "15px").attr("alignment-baseline","middle");
-svg.append('rect')
+/*svg.append('rect')
   .attr('x', 0)
   .attr('y', yPos-30)
   .attr('width', 180)
   .attr('height', 120)
   .attr('stroke', 'black')
   .style("fill", "none");
-
+*/
 }
 </script>
 </body>
