@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<style> 
+circle {stroke: black;} 
+#tooltip {
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    background: white;
+    border: 10px;
+}
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+<body onload='init()'>
+<h1>Fuel Efficiency Study</h1>
+<h3>CS416 Data Visualization Final Project - Wusi Chen</h3>
+<p>Do you know which types of cars are more fuel-efficient on highway (or city roads)? Check out the below visualizations.</p>
+<p>Data Source: 2017 automobile data (Here is the <a href="https://flunky.github.io/cars2017.csv">cars2017.csv</a> file).</p>
+<div>
+    <table>
+        <tr style="color:rgb(248, 8, 8);font-size:16px;">
+            <th>Please select from one of the car types below</th>
+        </tr>
+        <tr>
+            <td>
+                <button onclick="drawGasoline4()">Gasoline 4 Cylinders</button>
+                <button onclick="drawGasoline6()">Gasoline 6 Cylinders</button>
+                <button onclick="drawGasoline8()">Gasoline 8 Cylinders</button>
+                <button onclick="drawDiesel()">Diesel</button>
+                <button onclick="drawElectricity()">Hybrid</button>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<h2 id="currentPlot"></h2>
+<div>
+    <ul id='takeaway'></ul>
+    <p style="color:rgb(248, 8, 8)"> <b>You can move the cursor over the datapoints to see more detail.</b></p>
+</div>
+<div>
+    <svg id="svg1" width=700 height=700></svg>
+    <svg id="legend" height=700 width=200></svg>
+</div>
+
+<div id="tooltip"></div>
+<script>
+const height = 400;
+const width = 400;
+const legend_width = 200;
+const margin = 75;
+const radius = 8;
+const lineSpace = 17;
+var data;
+var tooltip = d3.select("#tooltip").style('font-size', '14px');
+
+async function init() {
+data = await d3.csv("/cars2017-2.csv");
+drawGasoline4();
+drawLegend();
+}
+
+function drawGasoline4() {
+    d3.select("#svg1").selectAll('*').remove();
+    d3.select("#takeaway").selectAll('*').remove();
+    document.getElementById("currentPlot").innerHTML = "Cars with 4-Cylinder Gasoline Engines";
+    drawChart("Gasoline", 4);
+    d3.select("#takeaway")
+    .append('li')
+    .html("For most cars with 4-cylinder gasoline engines, their highway MPG is higher than their city MPG, which means that they are more fuel efficient on highways.")
+    .append('li')
+    .html("The cars with top fuel efficiency in this type are from some Asian Brands.");
+}
+
+function drawGasoline6() {
+    d3.select("#svg1").selectAll('*').remove();
+    d3.select("#takeaway").selectAll('*').remove();
+    document.getElementById("currentPlot").innerHTML = "Cars with 6-Cylinder Gasoline Engines";
+    drawChart("Gasoline", 6);
+    d3.select("#takeaway")
+    .append('li')
+    .html("For most cars with 6-cylinder gasoline engines, their highway MPG is higher than their city MPG, which means that they are more fuel efficient on highways.");
+}
+
+function drawGasoline8() {
+    d3.select("#svg1").selectAll('*').remove();
+    d3.select("#takeaway").selectAll('*').remove();
+    document.getElementById("currentPlot").innerHTML = "Cars with 8-Cylinder Gasoline Engines";
+    drawChart("Gasoline", 8);
+    d3.select("#takeaway")
+    .append('li')
+    .html("For most cars with 8-cylinder gasoline engines, their highway MPG is higher than their city MPG, which means that they are more fuel efficient on highways.")
+    .append('li')
+    .html("The cars with top fuel efficiency in this type are from some Europe and USA Brands.");
+}
+
+function drawDiesel() {
+    d3.select("#svg1").selectAll('*').remove();
+    d3.select("#takeaway").selectAll('*').remove();
+    document.getElementById("currentPlot").innerHTML = "Cars with Diesel Engines";
+    drawChart("Diesel", 0);
+    d3.select("#takeaway")
+    .append('li')
+    .html("For most cars with diesel engines, their highway MPG is higher than their city MPG, which means that they are more fuel efficient on highways.");
+}
+
+function drawElectricity() {
+    d3.select("#svg1").selectAll('*').remove();
+    d3.select("#takeaway").selectAll('*').remove();
+    document.getElementById("currentPlot").innerHTML = "Hybrid Cars";
+    drawChart("Electricity", 0);
+    d3.select("#takeaway")
+    .append('li')
+    .html("The city MPG of most hybrid cars is higher than their highway MPG, which means that they are more fuel efficient on city roads.")
+    .append('li')
+    .html("The fuel efficiency of hybrid cars is much better than that of cars with diesel or gasoline engines.");
+}
+
+function drawChart(fuel, cylinder) {
+    var data2;
+    if (fuel == "Gasoline")
+    {
+        data2 = data.filter(function(d){ return (d.Fuel == fuel && d.EngineCylinders == cylinder) });
+    }
+    else
+    {
+        data2 = data.filter(function(d){ return d.Fuel == fuel});
+    }
+
+    var cityMin = d3.min(data2, function(d) { return +d.AverageCityMPG; });
+    var cityMax = d3.max(data2, function(d) { return +d.AverageCityMPG; });
+    var highMin = d3.min(data2, function(d) { return +d.AverageHighwayMPG; });
+    var highMax = d3.max(data2, function(d) { return +d.AverageHighwayMPG; });
+    var minBound = Math.min(cityMin, highMin);
+    var maxBound = Math.max(cityMax, highMax);
+    var x = d3.scaleLinear().domain([cityMin - 2, cityMax + 2]).range([0,width]);
+    var y = d3.scaleLinear().domain([highMin - 2, highMax + 2]).range([height,0]);
+    var color = d3.scaleOrdinal().domain(["USA", "Europe", "Asia" ]).range([ "#440154ff", "#21908dff", "#fde725ff"])
+
+d3.select("#svg1")
+.attr("width", width + 2 * margin)
+.attr("height", height + 2 * margin)
+.append("g")
+.attr("transform", "translate("+margin+","+margin+")")
+.selectAll("circle")
+.data(data2)
+.enter()
+.append("circle")
+.attr("cx",function(d,i) {return x(d.AverageCityMPG);})
+.attr("cy",function(d,i) {return y(d.AverageHighwayMPG);})
+.attr("r", radius)
+.style("fill", function (d) { return color(d.Region) } )
+.on("mouseover", function(d,i) {
+        tooltip.style("opacity", 1)
+               .style("left",(d3.event.pageX)+"px")
+               .style("top",(d3.event.pageY)+"px")
+               .style("text-anchor", "left")
+               .html("Make: " + d.Make + "<br>" + "Cylinder: " + d.EngineCylinders +  "<br>" + " Average City: " + d.AverageCityMPG + "<br>" + " Average Highway: " + d.AverageHighwayMPG);
+    })
+.on("mouseout", function() { tooltip.style("opacity", 0) });
+
+d3.select("#svg1").append("g")
+.style("font", "14px times")
+.attr("transform", "translate("+margin+","+margin+")")
+.call(d3.axisLeft(y));
+
+d3.select("#svg1").append("g")
+.style("font", "14px times")
+.attr("transform", "translate("+margin+","+(height+margin)+")")
+.call(d3.axisBottom(x));
+
+d3.select("#svg1").append("text")             
+.attr("transform","translate(" + (margin+width/2) + " ," + (height + margin + 40) + ")")
+.style("text-anchor", "middle")
+.text("Average City MPG");
+
+d3.select("#svg1").append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 0 - margin.left)
+.attr("x",0 - (height / 2))
+.attr("dy", "1em")
+.style("text-anchor", "middle")
+.text("Average Highway MPG");  
+
+var lineStart = Math.max(cityMin, highMin) - 2;
+var lineEnd = Math.min(cityMax, highMax) + 2;
+d3.select("#svg1")
+.append("g")
+.attr("transform", "translate("+margin+","+margin+")")
+.append('line')
+.attr('x1', x(lineStart))
+.attr('y1', y(lineStart))
+.attr('x2', x(lineEnd))
+.attr('y2', y(lineEnd))
+.attr('stroke', 'red')
+.style("stroke-dasharray", ("15, 7"))
+.style("stroke-width", 3)
+.style("stroke-opacity", 0.5);
+
+d3.select("#svg1")
+.append("g")
+.attr("transform", "translate("+margin+","+margin+")")
+.append('text')
+.attr('x', x(lineEnd) - 150)
+.attr('y', y(lineEnd) - 30)
+.attr('stroke', 'red')
+.attr('width', 100)
+.attr('height',100)
+.style("font-size", 13)
+.text("Equal Fuel Efficiency");
+
+d3.select("#svg1")
+.append("g")
+.attr("transform", "translate("+margin+","+margin+")")
+.append('text')
+.attr('x', x(lineEnd) - 150)
+.attr('y', y(lineEnd) - 30 + lineSpace)
+.attr('stroke', 'red')
+.attr('width', 100)
+.attr('height',100)
+.style("font-size", 13)
+.text("(City MPG = Highway MPG)");
+
+if (fuel == "Gasoline" && cylinder == 4) {
+    d3.select("#svg1")
+    .append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .append('rect')
+    .attr('x', x(24.5))
+    .attr('y', y(39))
+    .attr('width', Math.abs(x(24.5)-x(40)))
+    .attr('height', Math.abs(y(39)-y(33.5)))
+    .attr('stroke', 'DarkOrange')
+    .style("stroke-dasharray", ("15, 7"))
+    .style("stroke-width", 3)
+    .style("stroke-opacity", 0.5)
+    .style("fill", "none");
+
+    d3.select("#svg1")
+    .append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .append('text')
+    .attr('x', x(35))
+    .attr('y', y(32.7))
+    .attr('stroke', 'DarkOrange')
+    .style("font-size", 13)
+    .text("Asia cars are more");
+
+    d3.select("#svg1")
+    .append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .append('text')
+    .attr('x', x(35))
+    .attr('y', y(32.7) + lineSpace)
+    .attr('stroke', 'DarkOrange')
+    .style("font-size", 13)
+    .text("fuel efficient");
+}
+
+if (fuel == "Gasoline" && cylinder == 8) {
+    d3.select("#svg1")
+    .append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .append('rect')
+    .attr('x', x(15.5))
+    .attr('y', y(27))
+    .attr('width', Math.abs(x(15.5)-x(17.5)))
+    .attr('height', Math.abs(y(24)-y(27)))
+    .attr('stroke', 'DarkOrange')
+    .style("stroke-dasharray", ("15, 7"))
+    .style("stroke-width", 3)
+    .style("stroke-opacity", 0.5)
+    .style("fill", "none");
+
+    d3.select("#svg1")
+    .append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .append('text')
+    .attr('x', x(16.5))
+    .attr('y', y(23.5))
+    .attr('stroke', 'DarkOrange')
+    .style("font-size", 13)
+    .text("Europe and USA cars are");
+
+    d3.select("#svg1")
+    .append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .append('text')
+    .attr('x', x(16.5))
+    .attr('y', y(23.5) + lineSpace)
+    .attr('stroke', 'DarkOrange')
+    .style("font-size", 13)
+    .text("more fuel efficient");
+}
+
+
+}
+
+
+
+function drawLegend() {
+var svg = d3.select("#legend")
+.attr("width", legend_width)
+.attr("height", height)
+const yPos = 100;
+svg.append("circle").attr("cx",30).attr("cy",yPos).attr("r", radius).style("fill", "#440154ff");
+svg.append("circle").attr("cx",30).attr("cy",yPos+30).attr("r", radius).style("fill", "#21908dff");
+svg.append("circle").attr("cx",30).attr("cy",yPos+60).attr("r", radius).style("fill", "#fde725ff");
+svg.append("text").attr("x", 50).attr("y", yPos).text("USA Brands").style("font-size", "15px").attr("alignment-baseline","middle");
+svg.append("text").attr("x", 50).attr("y", yPos+30).text("Europe Brands").style("font-size", "15px").attr("alignment-baseline","middle");
+svg.append("text").attr("x", 50).attr("y", yPos+60).text("Asia Brands").style("font-size", "15px").attr("alignment-baseline","middle");
+svg.append('rect')
+  .attr('x', 0)
+  .attr('y', yPos-30)
+  .attr('width', 180)
+  .attr('height', 120)
+  .attr('stroke', 'black')
+  .style("fill", "none");
+
+}
+</script>
+</body>
+</html>
