@@ -287,85 +287,91 @@ function drawElectricity() {
     .html("The fuel efficiency of hybrid cars is much better than that of cars with diesel or gasoline engines.");
 }
 
-function updateChart(fuel, cylinder) {
-        var cityMin = d3.min(data, function(d) { return +d.AverageCityMPG; });
-        var cityMax = d3.max(data, function(d) { return +d.AverageCityMPG; });
-        var highMin = d3.min(data, function(d) { return +d.AverageHighwayMPG; });
-        var highMax = d3.max(data, function(d) { return +d.AverageHighwayMPG; });
-        var minBound = Math.min(cityMin, highMin);
-        var maxBound = Math.max(cityMax, highMax);
-        x.domain([cityMin - 2, cityMax + 2]);
-        y.domain([highMin - 2, highMax + 2]);
+async function updateChart(fuel, cylinder) {
+    var cityMin = d3.min(data, function(d) { return +d.AverageCityMPG; });
+    var cityMax = d3.max(data, function(d) { return +d.AverageCityMPG; });
+    var highMin = d3.min(data, function(d) { return +d.AverageHighwayMPG; });
+    var highMax = d3.max(data, function(d) { return +d.AverageHighwayMPG; });
+    var minBound = Math.min(cityMin, highMin);
+    var maxBound = Math.max(cityMax, highMax);
+    x.domain([cityMin - 2, cityMax + 2]);
+    y.domain([highMin - 2, highMax + 2]);
 
-        svg.transition().duration(2000)
-        .attr("cx",function(d,i) {return x(d.AverageCityMPG);})
-        .attr("cy",function(d,i) {return y(d.AverageHighwayMPG);})
-        .style("opacity", 1);
+    svg.transition().duration(2000)
+    .attr("cx",function(d,i) {return x(d.AverageCityMPG);})
+    .attr("cy",function(d,i) {return y(d.AverageHighwayMPG);})
+    .style("opacity", 1);
 
-        xAxis.transition().duration(2000)
-        .call(d3.axisBottom(x));
-        yAxis.transition().duration(2000)
-        .call(d3.axisLeft(y));
+    xAxis.transition().duration(2000)
+    .call(d3.axisBottom(x));
+    yAxis.transition().duration(2000)
+    .call(d3.axisLeft(y));
 
-        lineStart = Math.max(cityMin, highMin) - 2;
-        lineEnd = Math.min(cityMax, highMax) + 2;
-        equalLine.transition().duration(2000)
-        .attr('x1', x(lineStart))
-        .attr('y1', y(lineStart))
-        .attr('x2', x(lineEnd))
-        .attr('y2', y(lineEnd));
+    lineStart = Math.max(cityMin, highMin) - 2;
+    lineEnd = Math.min(cityMax, highMax) + 2;
+    equalLine.transition().duration(2000)
+    .attr('x1', x(lineStart))
+    .attr('y1', y(lineStart))
+    .attr('x2', x(lineEnd))
+    .attr('y2', y(lineEnd));
 
-        text1.transition().duration(2000)
-        .attr('x', x(lineEnd) - 150)
-        .attr('y', y(lineEnd) - 30);
-        text2.transition().duration(2000)
-        .attr('x', x(lineEnd) - 150)
-        .attr('y', y(lineEnd) - 30 + lineSpace);
+    text1.transition().duration(2000)
+    .attr('x', x(lineEnd) - 150)
+    .attr('y', y(lineEnd) - 30);
+    text2.transition().duration(2000)
+    .attr('x', x(lineEnd) - 150)
+    .attr('y', y(lineEnd) - 30 + lineSpace);
 
-        if (lastFuel == "Gasoline" && lastCylinder == 4) {
-            box.transition().duration(2000)
-            .attr('x', x(24.5))
-            .attr('y', y(39))
-            .attr('width', Math.abs(x(24.5)-x(40)))
-            .attr('height', Math.abs(y(39)-y(33.5)))
-            .style("stroke-opacity", 0);
+    if (lastFuel == "Gasoline" && lastCylinder == 4) {
+        box.transition().duration(2000)
+        .attr('x', x(24.5))
+        .attr('y', y(39))
+        .attr('width', Math.abs(x(24.5)-x(40)))
+        .attr('height', Math.abs(y(39)-y(33.5)))
+        .style("stroke-opacity", 0);
+        console.log("point 1");
 
-            text3.transition().duration(2000)
-            .attr('x', x(35))
-            .attr('y', y(32.7))
-            .style( "opacity", 0);
+        text3.transition().duration(2000)
+        .attr('x', x(35))
+        .attr('y', y(32.7))
+        .style( "opacity", 0);
+        console.log("point 1");
 
-            text4.transition().duration(2000)
-            .attr('x', x(35))
-            .attr('y', y(32.7) + lineSpace)
-            .style( "opacity", 0);       
-        }
+        text4.transition().duration(2000)
+        .attr('x', x(35))
+        .attr('y', y(32.7) + lineSpace)
+        .style( "opacity", 0);
+        console.log("point 1");       
+    }
 
-        if (lastFuel == "Gasoline" && lastCylinder == 8) {
-            box.transition().duration(2000)
-            .attr('x', x(15.5))
-            .attr('y', y(27))
-            .attr('width', Math.abs(x(15.5)-x(17.5)))
-            .attr('height', Math.abs(y(24)-y(27)))
-            .style("stroke-opacity", 0);
+    if (lastFuel == "Gasoline" && lastCylinder == 8) {
+        box.transition().duration(2000)
+        .attr('x', x(15.5))
+        .attr('y', y(27))
+        .attr('width', Math.abs(x(15.5)-x(17.5)))
+        .attr('height', Math.abs(y(24)-y(27)))
+        .style("stroke-opacity", 0);
+        console.log("point 2");
 
-            text3.transition().duration(2000)
-            .attr('x', x(16.5))
-            .attr('y', y(23.5))
-            .style( "opacity", 0);
+        text3.transition().duration(2000)
+        .attr('x', x(16.5))
+        .attr('y', y(23.5))
+        .style( "opacity", 0);
+        console.log("point 2");
 
-            text4.transition().duration(2000)
-            .attr('x', x(16.5))
-            .attr('y', y(23.5) + lineSpace)
-            .style( "opacity", 0); 
-        }
+        text4.transition().duration(2000)
+        .attr('x', x(16.5))
+        .attr('y', y(23.5) + lineSpace)
+        .style( "opacity", 0);
+        console.log("point 2");
+    }
+
     
-    firstTime = 0;
 
 
+    await sleep(2500);
 
-
-    svg.transition().duration(2000).delay(2500)
+    svg.transition().duration(2000)
     .style("opacity", function (d) {
         if (fuel == "Gasoline") {
             if (d.Fuel == fuel && d.EngineCylinders == cylinder) {
@@ -385,46 +391,53 @@ function updateChart(fuel, cylinder) {
         }
     });
 
-
-
-
-    if (fuel == "Gasoline" && cylinder == 4) {
+    if (fuel == "Gasoline" && cylinder == 4) {     
         box
         .attr('x', x(24.5))
         .attr('y', y(39))
         .attr('width', Math.abs(x(24.5)-x(40)))
         .attr('height', Math.abs(y(39)-y(33.5)));
+        console.log("point 3");
 
         text3
         .attr('x', x(35))
         .attr('y', y(32.7))
         .text("Asia cars are top");
+        console.log("point 3");
 
         text4
         .attr('x', x(35))
         .attr('y', y(32.7) + lineSpace)
-        .text("fuel-efficient");        
+        .text("fuel-efficient");
+        console.log("point 3");        
     }
 
     if (fuel == "Gasoline" && cylinder == 8) {
+        
         box
         .attr('x', x(15.5))
         .attr('y', y(27))
         .attr('width', Math.abs(x(15.5)-x(17.5)))
         .attr('height', Math.abs(y(24)-y(27)));
+        console.log("point 4");
 
         text3
         .attr('x', x(16.5))
         .attr('y', y(23.5))
         .text("Europe and USA cars are");
+        console.log("point 4");
 
         text4
         .attr('x', x(16.5))
         .attr('y', y(23.5) + lineSpace)
-        .text("top fuel-efficient");    
+        .text("top fuel-efficient");
+        console.log("point 4");            
     }
 
 
+
+
+    await sleep(2500);
 
     var data2;
     if (fuel == "Gasoline")
@@ -444,70 +457,80 @@ function updateChart(fuel, cylinder) {
     x.domain([cityMin2 - 2, cityMax2 + 2]);
     y.domain([highMin2 - 2, highMax2 + 2]);
 
-    svg.transition().duration(2000).delay(5000)
+    svg.transition().duration(2000)
     .attr("cx",function(d,i) {return x(d.AverageCityMPG);})
     .attr("cy",function(d,i) {return y(d.AverageHighwayMPG);});
 
-    xAxis.transition().duration(2000).delay(5000)
+    xAxis.transition().duration(2000)
     .call(d3.axisBottom(x));
-    yAxis.transition().duration(2000).delay(5000)
+    yAxis.transition().duration(2000)
     .call(d3.axisLeft(y));
 
     lineStart = Math.max(cityMin2, highMin2) - 2;
     lineEnd = Math.min(cityMax2, highMax2) + 2;
-    equalLine.transition().duration(2000).delay(5000)
+    equalLine.transition().duration(2000)
     .attr('x1', x(lineStart))
     .attr('y1', y(lineStart))
     .attr('x2', x(lineEnd))
     .attr('y2', y(lineEnd))
 
-    text1.transition().duration(2000).delay(5000)
+    text1.transition().duration(2000)
     .attr('x', x(lineEnd) - 150)
     .attr('y', y(lineEnd) - 30)
-    text2.transition().duration(2000).delay(5000)
+    text2.transition().duration(2000)
     .attr('x', x(lineEnd) - 150)
     .attr('y', y(lineEnd) - 30 + lineSpace)
 
     if (fuel == "Gasoline" && cylinder == 4) {
-        box.transition().duration(2000).delay(5000)
+        box.transition().duration(2000)
         .attr('x', x(24.5))
         .attr('y', y(39))
         .attr('width', Math.abs(x(24.5)-x(40)))
         .attr('height', Math.abs(y(39)-y(33.5)))
         .style("stroke-opacity", 0.5);
+        console.log("point 5");
 
-        text3.transition().duration(2000).delay(5000)
+        text3.transition().duration(2000)
         .attr('x', x(35))
         .attr('y', y(32.7))
         .style( "opacity", 1);
+        console.log("point 5");
 
-        text4.transition().duration(2000).delay(5000)
+        text4.transition().duration(2000)
         .attr('x', x(35))
         .attr('y', y(32.7) + lineSpace)
-        .style( "opacity", 1);        
+        .style( "opacity", 1);
+        console.log("point 5");       
     }
 
     if (fuel == "Gasoline" && cylinder == 8) {
-        box.transition().duration(2000).delay(5000)
+        box.transition().duration(2000)
         .attr('x', x(15.5))
         .attr('y', y(27))
         .attr('width', Math.abs(x(15.5)-x(17.5)))
         .attr('height', Math.abs(y(24)-y(27)))
         .style("stroke-opacity", 0.5);
+        console.log("point 6");
 
-        text3.transition().duration(2000).delay(5000)
+        text3.transition().duration(2000)
         .attr('x', x(16.5))
         .attr('y', y(23.5))
         .style( "opacity", 1);
+        console.log("point 6");
 
-        text4.transition().duration(2000).delay(5000)
+        text4.transition().duration(2000)
         .attr('x', x(16.5))
         .attr('y', y(23.5) + lineSpace)
-        .style( "opacity", 1);    
+        .style( "opacity", 1);
+        console.log("point 6");   
     }
 
     lastCylinder = cylinder;
     lastFuel = fuel;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function drawLegend() {
@@ -521,14 +544,6 @@ function drawLegend() {
     svg.append("text").attr("x", 50).attr("y", yPos).text("USA Brands").style("font-size", "15px").attr("alignment-baseline","middle");
     svg.append("text").attr("x", 50).attr("y", yPos+30).text("Europe Brands").style("font-size", "15px").attr("alignment-baseline","middle");
     svg.append("text").attr("x", 50).attr("y", yPos+60).text("Asia Brands").style("font-size", "15px").attr("alignment-baseline","middle");
-    /*svg.append('rect')
-    .attr('x', 0)
-    .attr('y', yPos-30)
-    .attr('width', 180)
-    .attr('height', 120)
-    .attr('stroke', 'black')
-    .style("fill", "none");
-    */
 }
 
 </script>
