@@ -14,6 +14,14 @@ td {
   border: 1px solid black;
   border-collapse: collapse;
 }
+
+#takeaway ul {
+    display: block;
+    float: left;
+    height: 27px;
+    list-style: none;
+    margin-right: 20px;
+}
 </style>
 <head>
     <title>Automobile Fuel Efficiency Study</title>
@@ -73,6 +81,8 @@ var text3;
 var text4;
 var firstTime = 1;
 var box;
+var lastFuel;
+var lastCylinder;
 
 var tooltip = d3.select("#tooltip").style('font-size', '14px');
 
@@ -278,7 +288,6 @@ function drawElectricity() {
 }
 
 function updateChart(fuel, cylinder) {
-    if (firstTime == 0) {
         var cityMin = d3.min(data, function(d) { return +d.AverageCityMPG; });
         var cityMax = d3.max(data, function(d) { return +d.AverageCityMPG; });
         var highMin = d3.min(data, function(d) { return +d.AverageHighwayMPG; });
@@ -313,15 +322,44 @@ function updateChart(fuel, cylinder) {
         .attr('x', x(lineEnd) - 150)
         .attr('y', y(lineEnd) - 30 + lineSpace);
 
-        box.transition().duration(2000)
-        .style("stroke-opacity", 0);
+        if (lastFuel == "Gasoline" && lastCylinder == 4) {
+            box.transition().duration(2000)
+            .attr('x', x(24.5))
+            .attr('y', y(39))
+            .attr('width', Math.abs(x(24.5)-x(40)))
+            .attr('height', Math.abs(y(39)-y(33.5)))
+            .style("stroke-opacity", 0);
 
-        text3.transition().duration(2000)
-        .style( "opacity", 0);
+            text3.transition().duration(2000)
+            .attr('x', x(35))
+            .attr('y', y(32.7))
+            .style( "opacity", 0);
 
-        text4.transition().duration(2000)
-        .style( "opacity", 0);
-    }
+            text4.transition().duration(2000)
+            .attr('x', x(35))
+            .attr('y', y(32.7) + lineSpace)
+            .style( "opacity", 0);       
+        }
+
+        if (lastFuel == "Gasoline" && lastCylinder == 8) {
+            box.transition().duration(2000)
+            .attr('x', x(15.5))
+            .attr('y', y(27))
+            .attr('width', Math.abs(x(15.5)-x(17.5)))
+            .attr('height', Math.abs(y(24)-y(27)))
+            .style("stroke-opacity", 0);
+
+            text3.transition().duration(2000)
+            .attr('x', x(16.5))
+            .attr('y', y(23.5))
+            .style( "opacity", 0);
+
+            text4.transition().duration(2000)
+            .attr('x', x(16.5))
+            .attr('y', y(23.5) + lineSpace)
+            .style( "opacity", 0); 
+        }
+    
     firstTime = 0;
 
 
@@ -346,6 +384,45 @@ function updateChart(fuel, cylinder) {
             }
         }
     });
+
+
+
+
+    if (fuel == "Gasoline" && cylinder == 4) {
+        box
+        .attr('x', x(24.5))
+        .attr('y', y(39))
+        .attr('width', Math.abs(x(24.5)-x(40)))
+        .attr('height', Math.abs(y(39)-y(33.5)));
+
+        text3
+        .attr('x', x(35))
+        .attr('y', y(32.7))
+        .text("Asia cars are top");
+
+        text4
+        .attr('x', x(35))
+        .attr('y', y(32.7) + lineSpace)
+        .text("fuel-efficient");        
+    }
+
+    if (fuel == "Gasoline" && cylinder == 8) {
+        box
+        .attr('x', x(15.5))
+        .attr('y', y(27))
+        .attr('width', Math.abs(x(15.5)-x(17.5)))
+        .attr('height', Math.abs(y(24)-y(27)));
+
+        text3
+        .attr('x', x(16.5))
+        .attr('y', y(23.5))
+        .text("Europe and USA cars are");
+
+        text4
+        .attr('x', x(16.5))
+        .attr('y', y(23.5) + lineSpace)
+        .text("top fuel-efficient");    
+    }
 
 
 
@@ -392,13 +469,6 @@ function updateChart(fuel, cylinder) {
     .attr('y', y(lineEnd) - 30 + lineSpace)
 
     if (fuel == "Gasoline" && cylinder == 4) {
-        text3
-        .attr('x', x(35))
-        .attr('y', y(32.7));
-        text4
-        .attr('x', x(35))
-        .attr('y', y(32.7) + lineSpace);
-
         box.transition().duration(2000).delay(5000)
         .attr('x', x(24.5))
         .attr('y', y(39))
@@ -407,22 +477,17 @@ function updateChart(fuel, cylinder) {
         .style("stroke-opacity", 0.5);
 
         text3.transition().duration(2000).delay(5000)
-        .style( "opacity", 1)
-        .text("Asia cars are top");
+        .attr('x', x(35))
+        .attr('y', y(32.7))
+        .style( "opacity", 1);
 
         text4.transition().duration(2000).delay(5000)
-        .style( "opacity", 1)
-        .text("fuel-efficient");        
+        .attr('x', x(35))
+        .attr('y', y(32.7) + lineSpace)
+        .style( "opacity", 1);        
     }
 
     if (fuel == "Gasoline" && cylinder == 8) {
-        text3
-        .attr('x', x(16.5))
-        .attr('y', y(23.5));
-        text4
-        .attr('x', x(16.5))
-        .attr('y', y(23.5) + lineSpace);
-        
         box.transition().duration(2000).delay(5000)
         .attr('x', x(15.5))
         .attr('y', y(27))
@@ -431,13 +496,18 @@ function updateChart(fuel, cylinder) {
         .style("stroke-opacity", 0.5);
 
         text3.transition().duration(2000).delay(5000)
-        .style( "opacity", 1)
-        .text("Europe and USA cars are");
+        .attr('x', x(16.5))
+        .attr('y', y(23.5))
+        .style( "opacity", 1);
 
         text4.transition().duration(2000).delay(5000)
-        .style( "opacity", 1)
-        .text("top fuel-efficient");    
+        .attr('x', x(16.5))
+        .attr('y', y(23.5) + lineSpace)
+        .style( "opacity", 1);    
     }
+
+    lastCylinder = cylinder;
+    lastFuel = fuel;
 }
 
 function drawLegend() {
