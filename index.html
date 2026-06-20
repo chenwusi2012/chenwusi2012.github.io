@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wusi Chen Photography</title>
+  <meta name="description" content="A clean photography portfolio website for landscape, family, travel, and portrait photography." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="#home">Wusi Chen Photography</a>
+    <button class="nav-toggle" aria-label="Open menu">☰</button>
+    <nav class="nav">
+      <a href="#gallery">Gallery</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Photography Portfolio</p>
+        <h1>Quiet moments, clean composition, lasting memories.</h1>
+        <p class="hero-text">
+          A minimal photography portfolio for landscapes, family memories, travel stories, and portraits.
+          Replace the sample images with your own photos and publish it with GitHub Pages.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#gallery">View Gallery</a>
+          <a class="button secondary" href="#contact">Contact Me</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="assets/photos/hero.svg" alt="Featured photography placeholder" />
+      </div>
+    </section>
+
+    <section class="section intro">
+      <p>
+        This website is designed to be simple, fast, and photo-focused. It works as a personal portfolio,
+        family photography page, or a lightweight professional photography site.
+      </p>
+    </section>
+
+    <section id="gallery" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Selected Work</p>
+        <h2>Gallery</h2>
+      </div>
+
+      <div class="filter-bar" aria-label="Photo category filters">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="landscape">Landscape</button>
+        <button class="filter" data-filter="family">Family</button>
+        <button class="filter" data-filter="travel">Travel</button>
+        <button class="filter" data-filter="portrait">Portrait</button>
+      </div>
+
+      <div class="gallery-grid">
+        <figure class="photo-card" data-category="landscape">
+          <img src="assets/photos/photo-01.svg" alt="Landscape sample photo" />
+          <figcaption>
+            <span>Landscape</span>
+            <strong>Morning Light</strong>
+          </figcaption>
+        </figure>
+        <figure class="photo-card" data-category="family">
+          <img src="assets/photos/photo-02.svg" alt="Family sample photo" />
+          <figcaption>
+            <span>Family</span>
+            <strong>Weekend Walk</strong>
+          </figcaption>
+        </figure>
+        <figure class="photo-card" data-category="travel">
+          <img src="assets/photos/photo-03.svg" alt="Travel sample photo" />
+          <figcaption>
+            <span>Travel</span>
+            <strong>City Lines</strong>
+          </figcaption>
+        </figure>
+        <figure class="photo-card" data-category="portrait">
+          <img src="assets/photos/photo-04.svg" alt="Portrait sample photo" />
+          <figcaption>
+            <span>Portrait</span>
+            <strong>Natural Light</strong>
+          </figcaption>
+        </figure>
+        <figure class="photo-card" data-category="landscape">
+          <img src="assets/photos/photo-05.svg" alt="Landscape sample photo" />
+          <figcaption>
+            <span>Landscape</span>
+            <strong>Coastal Air</strong>
+          </figcaption>
+        </figure>
+        <figure class="photo-card" data-category="travel">
+          <img src="assets/photos/photo-06.svg" alt="Travel sample photo" />
+          <figcaption>
+            <span>Travel</span>
+            <strong>Evening Street</strong>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="about" class="section split">
+      <div>
+        <p class="eyebrow">About</p>
+        <h2>Behind the camera</h2>
+      </div>
+      <div class="copy">
+        <p>
+          I photograph everyday scenes with a focus on light, atmosphere, and natural emotion.
+          My favorite images are simple: a clean background, a meaningful expression, and a moment that feels real.
+        </p>
+        <p>
+          You can customize this section with your own photography style, camera gear, location, or story.
+        </p>
+      </div>
+    </section>
+
+    <section id="services" class="section cards-section">
+      <div class="section-heading">
+        <p class="eyebrow">What I Shoot</p>
+        <h2>Photo categories</h2>
+      </div>
+      <div class="info-cards">
+        <article>
+          <h3>Family</h3>
+          <p>Relaxed family moments, kids, birthdays, and everyday memories.</p>
+        </article>
+        <article>
+          <h3>Travel</h3>
+          <p>Clean travel stories, streets, landmarks, and details from the road.</p>
+        </article>
+        <article>
+          <h3>Landscape</h3>
+          <p>Outdoor scenes, mountains, coastlines, city views, and natural light.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact">
+      <p class="eyebrow">Contact</p>
+      <h2>Interested in working together?</h2>
+      <p>
+        Replace this with your preferred contact method. You can link to email, Instagram, Flickr,
+        or a contact form from another service.
+      </p>
+      <a class="button primary" href="mailto:your-email@example.com">your-email@example.com</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> Wusi Chen Photography. All rights reserved.</p>
+  </footer>
+
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Photo preview" hidden>
+    <button class="lightbox-close" type="button" aria-label="Close photo preview">&times;</button>
+    <figure class="lightbox-content">
+      <img class="lightbox-image" src="" alt="" />
+      <figcaption class="lightbox-caption"></figcaption>
+    </figure>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
