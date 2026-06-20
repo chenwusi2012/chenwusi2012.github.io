@@ -4,10 +4,10 @@ This is a simple static photography portfolio website that can be hosted on GitH
 
 ## Files
 
-- `index.html` — website content
-- `style.css` — visual design
-- `script.js` — mobile menu and gallery filters
-- `assets/photos/` — sample placeholder images
+- `docs/index.html` — website content
+- `docs/style.css` — visual design
+- `docs/script.js` — mobile menu and gallery filters
+- `docs/assets/photos/` — sample placeholder images
 
 ## How to customize
 
@@ -36,10 +36,10 @@ Avoid uploading original full-resolution camera files because the site will load
 For a personal website:
 
 1. Create a GitHub repository named: `your-github-username.github.io`
-2. Upload all files from this folder into the repository root.
+2. Keep the website files inside the repository's `docs` folder.
 3. Go to repository Settings → Pages.
 4. Choose source: `Deploy from a branch`.
-5. Choose branch: `main`, folder: `/root`.
+5. Choose branch: `main`, folder: `/docs`.
 6. Visit: `https://your-github-username.github.io`
 
 For a project website:
