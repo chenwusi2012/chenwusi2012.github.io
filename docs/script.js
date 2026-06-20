@@ -26,7 +26,7 @@ filters.forEach((button) => {
     button.classList.add("active");
 
     cards.forEach((card) => {
-      const isMatch = selected === "all" || card.dataset.category === selected;
+      const isMatch = selected === "all" || card.dataset.location === selected;
       card.style.display = isMatch ? "block" : "none";
     });
   });
@@ -41,13 +41,13 @@ const closeLightbox = () => {
 
 const openLightbox = (card) => {
   const image = card.querySelector("img");
-  const category = card.querySelector("figcaption span").textContent;
+  const location = card.querySelector("figcaption span").textContent;
   const title = card.querySelector("figcaption strong").textContent;
 
   activeCard = card;
   lightboxImage.src = image.src;
   lightboxImage.alt = image.alt;
-  lightboxCaption.textContent = `${category} — ${title}`;
+  lightboxCaption.textContent = `${location} — ${title}`;
   lightbox.hidden = false;
   document.body.classList.add("lightbox-open");
   requestAnimationFrame(() => lightbox.classList.add("open"));
