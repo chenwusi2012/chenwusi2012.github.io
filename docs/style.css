@@ -228,7 +228,7 @@ h3 {
 .photo-card {
   position: relative;
   overflow: hidden;
-  min-height: 360px;
+  height: 360px;
   margin: 0;
   border-radius: 24px;
   background: var(--card);
@@ -391,7 +391,7 @@ h3 {
   }
 
   .photo-card {
-    min-height: 300px;
+    height: 300px;
   }
 
   .nav-toggle {
