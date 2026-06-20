@@ -31,6 +31,15 @@ For web portfolio use:
 
 Avoid uploading original full-resolution camera files because the site will load slowly.
 
+## Photo workflow
+
+1. Copy original photos into the local `original-photos` folder. Git ignores this folder, so its contents are not uploaded to GitHub.
+2. Double-click `convert-photos.cmd`, or ask Codex to convert the new photos.
+3. Optimized WebP files are written to `docs/assets/photos` with a maximum edge of 2000 px and quality 84.
+4. Add the new WebP filenames to `docs/index.html` when placing them in the gallery.
+
+The converter skips photos that already have an up-to-date WebP file. Run `convert-photos.cmd --force` to rebuild all outputs.
+
 ## GitHub Pages publishing
 
 For a personal website:
