@@ -6,27 +6,38 @@ This is a simple static photography portfolio website that can be hosted on GitH
 
 - `docs/index.html` — website content
 - `docs/style.css` — visual design
-- `docs/script.js` — mobile menu and gallery filters
-- `docs/assets/photos/` — sample placeholder images
+- `docs/script.js` — mobile menu, gallery rendering, and gallery filters
+- `docs/assets/photos/` — optimized WebP photos
+- `docs/assets/photos/photos.json` — photo titles, locations, filenames, and alt text
+- `original-photos/` — local original photos; Git ignores this folder
 
 ## How to customize
 
-1. Replace the SVG sample images in `assets/photos/` with your own photos.
-2. Keep the same filenames if you want the site to work without editing HTML.
-3. Or edit `index.html` and change image paths such as:
+1. Put original photos in `original-photos`.
+2. Convert them to WebP with `convert-photos.cmd`, or ask Codex to do it.
+3. Add each displayed photo to `docs/assets/photos/photos.json`.
 
-```html
-<img src="assets/photos/photo-01.jpg" alt="Landscape photo">
+Example:
+
+```json
+{
+  "file": "DSC02413.webp",
+  "title": "Island Sunset",
+  "location": "Honolulu",
+  "alt": "Palm trees silhouetted against a colorful island sunset"
+}
 ```
 
-4. Change the name, bio, categories, and contact email inside `index.html`.
+4. Change the name, bio, and contact email inside `docs/index.html`.
+
+Because the gallery loads `photos.json`, GitHub Pages will display it normally. For local preview, use a small local server instead of double-clicking `docs/index.html`; some browsers block JSON loading from `file://` pages.
 
 ## Recommended photo size
 
 For web portfolio use:
 
 - Long edge: 1600–2400 px
-- Format: JPG or WebP
+- Format: WebP
 - Target file size: about 300 KB to 1.5 MB per photo
 
 Avoid uploading original full-resolution camera files because the site will load slowly.
@@ -36,7 +47,7 @@ Avoid uploading original full-resolution camera files because the site will load
 1. Copy original photos into the local `original-photos` folder. Git ignores this folder, so its contents are not uploaded to GitHub.
 2. Double-click `convert-photos.cmd`, or ask Codex to convert the new photos.
 3. Optimized WebP files are written to `docs/assets/photos` with a maximum edge of 2000 px and quality 84.
-4. Add the new WebP filenames to `docs/index.html` when placing them in the gallery.
+4. Add the new WebP filenames and metadata to `docs/assets/photos/photos.json` when placing them in the gallery.
 
 The converter skips photos that already have an up-to-date WebP file. Run `convert-photos.cmd --force` to rebuild all outputs.
 

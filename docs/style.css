@@ -224,6 +224,12 @@ h3 {
   gap: 18px;
 }
 
+.gallery-message {
+  margin: 18px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .photo-card {
   position: relative;
   overflow: hidden;
