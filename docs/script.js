@@ -2,6 +2,7 @@ const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".nav");
 const yearFilterBar = document.querySelector("#year-filters");
 const locationFilterBar = document.querySelector("#location-filters");
+const galleryCount = document.querySelector(".gallery-count");
 const galleryGrid = document.querySelector(".gallery-grid");
 const galleryMessage = document.querySelector(".gallery-message");
 const lightbox = document.querySelector(".lightbox");
@@ -80,13 +81,19 @@ const renderLocationFilters = () => {
 };
 
 const updateVisibleCards = () => {
+  let visibleCount = 0;
+
   galleryGrid.querySelectorAll(".photo-card").forEach((card) => {
     const yearMatches = currentYear === "all" || card.dataset.year === currentYear;
     const locationMatches =
       currentLocation === "all" || card.dataset.location === currentLocation;
+    const isVisible = yearMatches && locationMatches;
 
-    card.style.display = yearMatches && locationMatches ? "block" : "none";
+    card.style.display = isVisible ? "block" : "none";
+    if (isVisible) visibleCount += 1;
   });
+
+  galleryCount.textContent = `Showing ${visibleCount} ${visibleCount === 1 ? "photo" : "photos"}`;
 };
 
 yearFilterBar.addEventListener("click", (event) => {

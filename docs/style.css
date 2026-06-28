@@ -274,6 +274,12 @@ h3 {
   background: var(--accent-dark);
 }
 
+.gallery-count {
+  margin: -8px 0 22px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
