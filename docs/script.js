@@ -8,7 +8,10 @@ const galleryMessage = document.querySelector(".gallery-message");
 const lightbox = document.querySelector(".lightbox");
 const lightboxImage = document.querySelector(".lightbox-image");
 const lightboxCaption = document.querySelector(".lightbox-caption");
+const lightboxCounter = document.querySelector(".lightbox-counter");
 const lightboxClose = document.querySelector(".lightbox-close");
+const lightboxPrev = document.querySelector(".lightbox-prev");
+const lightboxNext = document.querySelector(".lightbox-next");
 let activeCard = null;
 let photos = [];
 let currentYear = "all";
@@ -122,19 +125,46 @@ const closeLightbox = () => {
   activeCard?.focus();
 };
 
-const openLightbox = (card) => {
+const getVisibleCards = () =>
+  [...galleryGrid.querySelectorAll(".photo-card")].filter(
+    (card) => card.style.display !== "none",
+  );
+
+const showLightboxCard = (card) => {
   const image = card.querySelector("img");
   const meta = card.querySelector("figcaption span").textContent;
   const title = card.querySelector("figcaption strong").textContent;
+  const visibleCards = getVisibleCards();
+  const currentIndex = visibleCards.indexOf(card);
+  const hasMultiplePhotos = visibleCards.length > 1;
 
   activeCard = card;
   lightboxImage.src = image.src;
   lightboxImage.alt = image.alt;
   lightboxCaption.textContent = `${meta} — ${title}`;
+  lightboxCounter.textContent =
+    currentIndex >= 0 ? `${currentIndex + 1}/${visibleCards.length}` : "";
+  lightboxPrev.hidden = !hasMultiplePhotos || currentIndex <= 0;
+  lightboxNext.hidden = !hasMultiplePhotos || currentIndex >= visibleCards.length - 1;
+};
+
+const openLightbox = (card) => {
+  showLightboxCard(card);
   lightbox.hidden = false;
   document.body.classList.add("lightbox-open");
   requestAnimationFrame(() => lightbox.classList.add("open"));
   lightboxClose.focus();
+};
+
+const moveLightbox = (direction) => {
+  const visibleCards = getVisibleCards();
+  if (!activeCard || visibleCards.length < 2) return;
+
+  const currentIndex = visibleCards.indexOf(activeCard);
+  const nextIndex = currentIndex + direction;
+  if (nextIndex < 0 || nextIndex >= visibleCards.length) return;
+
+  showLightboxCard(visibleCards[nextIndex]);
 };
 
 const createPhotoCard = (photo) => {
@@ -193,10 +223,16 @@ const loadGallery = async () => {
 loadGallery();
 
 lightboxClose.addEventListener("click", closeLightbox);
+lightboxPrev.addEventListener("click", () => moveLightbox(-1));
+lightboxNext.addEventListener("click", () => moveLightbox(1));
 lightbox.addEventListener("click", (event) => {
   if (event.target === lightbox) closeLightbox();
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !lightbox.hidden) closeLightbox();
+  if (lightbox.hidden) return;
+
+  if (event.key === "Escape") closeLightbox();
+  if (event.key === "ArrowLeft") moveLightbox(-1);
+  if (event.key === "ArrowRight") moveLightbox(1);
 });

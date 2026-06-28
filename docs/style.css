@@ -390,6 +390,13 @@ h3 {
   margin: 0;
 }
 
+.lightbox-counter {
+  margin: 0 0 14px;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+
 .lightbox-image {
   max-width: 100%;
   max-height: 80vh;
@@ -424,6 +431,41 @@ h3 {
 .lightbox-close:hover,
 .lightbox-close:focus-visible {
   background: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: clamp(46px, 6vw, 64px);
+  height: clamp(46px, 6vw, 64px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.lightbox-nav[hidden] {
+  display: none;
+}
+
+.lightbox-prev {
+  left: clamp(14px, 3vw, 36px);
+}
+
+.lightbox-next {
+  right: clamp(14px, 3vw, 36px);
+}
+
+.lightbox-nav:hover,
+.lightbox-nav:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
   outline: none;
 }
 
