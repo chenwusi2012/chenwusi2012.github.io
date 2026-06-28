@@ -201,6 +201,13 @@ h3 {
   margin-bottom: 28px;
 }
 
+.filter-group {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.38);
+}
+
 .filter-label {
   margin: 0 0 10px;
   color: var(--muted);
