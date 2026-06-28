@@ -8,7 +8,7 @@ This is a simple static photography portfolio website that can be hosted on GitH
 - `docs/style.css` — visual design
 - `docs/script.js` — mobile menu, gallery rendering, and gallery filters
 - `docs/assets/photos/` — optimized WebP photos
-- `docs/assets/photos/photos.json` — photo titles, locations, filenames, and alt text
+- `docs/assets/photos/photos.json` — photo titles, years, locations, filenames, and alt text
 - `original-photos/` — local original photos; Git ignores this folder
 
 ## How to customize
@@ -24,6 +24,7 @@ Example:
   "file": "DSC02413.webp",
   "title": "Island Sunset",
   "location": "Honolulu",
+  "year": 2021,
   "alt": "Palm trees silhouetted against a colorful island sunset"
 }
 ```
@@ -47,7 +48,7 @@ Avoid uploading original full-resolution camera files because the site will load
 1. Copy original photos into the local `original-photos` folder. Git ignores this folder, so its contents are not uploaded to GitHub.
 2. Double-click `convert-photos.cmd`, or ask Codex to convert the new photos.
 3. Optimized WebP files are written to `docs/assets/photos` with a maximum edge of 2000 px and quality 84.
-4. Add the new WebP filenames and metadata to `docs/assets/photos/photos.json` when placing them in the gallery.
+4. Add the new WebP filenames, year, location, and metadata to `docs/assets/photos/photos.json` when placing them in the gallery.
 
 The converter skips photos that already have an up-to-date WebP file. Run `convert-photos.cmd --force` to rebuild all outputs.
 

@@ -1,6 +1,7 @@
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".nav");
-const filterBar = document.querySelector(".filter-bar");
+const yearFilterBar = document.querySelector('[data-filter-type="year"]');
+const locationFilterBar = document.querySelector('[data-filter-type="location"]');
 const galleryGrid = document.querySelector(".gallery-grid");
 const galleryMessage = document.querySelector(".gallery-message");
 const lightbox = document.querySelector(".lightbox");
@@ -8,7 +9,9 @@ const lightboxImage = document.querySelector(".lightbox-image");
 const lightboxCaption = document.querySelector(".lightbox-caption");
 const lightboxClose = document.querySelector(".lightbox-close");
 let activeCard = null;
-let currentFilter = "all";
+let photos = [];
+let currentYear = "all";
+let currentLocation = "all";
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -21,40 +24,87 @@ nav.querySelectorAll("a").forEach((link) => {
 });
 
 const slugify = (value) =>
-  value
+  String(value)
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
+const getLocationsForCurrentYear = () => {
+  const matchingPhotos =
+    currentYear === "all"
+      ? photos
+      : photos.filter((photo) => String(photo.year) === currentYear);
+
+  return [...new Set(matchingPhotos.map((photo) => photo.location).filter(Boolean))].sort();
+};
+
+const setActiveFilter = (filterBar, selectedValue) => {
+  filterBar.querySelectorAll(".filter").forEach((button) => {
+    button.classList.toggle("active", button.dataset.filter === selectedValue);
+  });
+};
+
+const createFilterButton = (label, value) => {
+  const button = document.createElement("button");
+  button.className = "filter";
+  button.type = "button";
+  button.dataset.filter = value;
+  button.textContent = label;
+  return button;
+};
+
+const renderYearFilters = () => {
+  const years = [...new Set(photos.map((photo) => photo.year).filter(Boolean))]
+    .map(String)
+    .sort((a, b) => Number(b) - Number(a));
+
+  yearFilterBar.replaceChildren(createFilterButton("All", "all"));
+  yearFilterBar.append(...years.map((year) => createFilterButton(year, year)));
+  setActiveFilter(yearFilterBar, currentYear);
+};
+
+const renderLocationFilters = () => {
+  const locations = getLocationsForCurrentYear();
+  const locationValues = locations.map(slugify);
+
+  if (currentLocation !== "all" && !locationValues.includes(currentLocation)) {
+    currentLocation = "all";
+  }
+
+  locationFilterBar.replaceChildren(createFilterButton("All", "all"));
+  locationFilterBar.append(
+    ...locations.map((location) => createFilterButton(location, slugify(location))),
+  );
+  setActiveFilter(locationFilterBar, currentLocation);
+};
+
 const updateVisibleCards = () => {
   galleryGrid.querySelectorAll(".photo-card").forEach((card) => {
-    const isMatch = currentFilter === "all" || card.dataset.location === currentFilter;
-    card.style.display = isMatch ? "block" : "none";
+    const yearMatches = currentYear === "all" || card.dataset.year === currentYear;
+    const locationMatches =
+      currentLocation === "all" || card.dataset.location === currentLocation;
+
+    card.style.display = yearMatches && locationMatches ? "block" : "none";
   });
 };
 
-const addLocationFilters = (photos) => {
-  const locations = [...new Set(photos.map((photo) => photo.location).filter(Boolean))].sort();
-
-  locations.forEach((location) => {
-    const button = document.createElement("button");
-    button.className = "filter";
-    button.type = "button";
-    button.dataset.filter = slugify(location);
-    button.textContent = location;
-    filterBar.append(button);
-  });
-};
-
-filterBar.addEventListener("click", (event) => {
+yearFilterBar.addEventListener("click", (event) => {
   const button = event.target.closest(".filter");
   if (!button) return;
 
-  currentFilter = button.dataset.filter;
+  currentYear = button.dataset.filter;
+  setActiveFilter(yearFilterBar, currentYear);
+  renderLocationFilters();
+  updateVisibleCards();
+});
 
-  filterBar.querySelectorAll(".filter").forEach((filter) => filter.classList.remove("active"));
-  button.classList.add("active");
+locationFilterBar.addEventListener("click", (event) => {
+  const button = event.target.closest(".filter");
+  if (!button) return;
+
+  currentLocation = button.dataset.filter;
+  setActiveFilter(locationFilterBar, currentLocation);
   updateVisibleCards();
 });
 
@@ -67,13 +117,13 @@ const closeLightbox = () => {
 
 const openLightbox = (card) => {
   const image = card.querySelector("img");
-  const location = card.querySelector("figcaption span").textContent;
+  const meta = card.querySelector("figcaption span").textContent;
   const title = card.querySelector("figcaption strong").textContent;
 
   activeCard = card;
   lightboxImage.src = image.src;
   lightboxImage.alt = image.alt;
-  lightboxCaption.textContent = `${location} — ${title}`;
+  lightboxCaption.textContent = `${meta} — ${title}`;
   lightbox.hidden = false;
   document.body.classList.add("lightbox-open");
   requestAnimationFrame(() => lightbox.classList.add("open"));
@@ -84,11 +134,12 @@ const createPhotoCard = (photo) => {
   const card = document.createElement("figure");
   const image = document.createElement("img");
   const caption = document.createElement("figcaption");
-  const location = document.createElement("span");
+  const meta = document.createElement("span");
   const title = document.createElement("strong");
 
   card.className = "photo-card";
   card.dataset.location = slugify(photo.location);
+  card.dataset.year = String(photo.year);
   card.tabIndex = 0;
   card.setAttribute("role", "button");
   card.setAttribute("aria-label", `View ${photo.title} larger`);
@@ -98,9 +149,9 @@ const createPhotoCard = (photo) => {
   image.loading = "lazy";
   image.decoding = "async";
 
-  location.textContent = photo.location;
+  meta.textContent = `${photo.location} · ${photo.year}`;
   title.textContent = photo.title;
-  caption.append(location, title);
+  caption.append(meta, title);
   card.append(image, caption);
 
   card.addEventListener("click", () => openLightbox(card));
@@ -119,13 +170,15 @@ const loadGallery = async () => {
     const response = await fetch("assets/photos/photos.json");
     if (!response.ok) throw new Error(`Unable to load photo metadata: ${response.status}`);
 
-    const photos = await response.json();
-    addLocationFilters(photos);
+    photos = await response.json();
     galleryGrid.append(...photos.map(createPhotoCard));
+    renderYearFilters();
+    renderLocationFilters();
     updateVisibleCards();
   } catch (error) {
     galleryMessage.hidden = false;
-    galleryMessage.textContent = "Photo gallery could not be loaded. If you are previewing locally, open the site with a local server instead of double-clicking index.html.";
+    galleryMessage.textContent =
+      "Photo gallery could not be loaded. If you are previewing locally, open the site with a local server instead of double-clicking index.html.";
     console.error(error);
   }
 };
